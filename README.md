@@ -36,8 +36,8 @@ py resnet_gui.py
 ```
 
 ## To Do:
+- [ ] Port and deploy app to Streamlit as a web app
+- [ ] Update README with new video format
 - [ ] Add a "clear" button to reset all windows in GUI
-- [ ] Create an executable file for the app
 - [ ] Add feature to utilize other pre-trained models trained on the ImageNet database
 - [ ] Add feature to compare performances of two pre-trained models at a time
-- [ ] Create scalable windows for GUI
