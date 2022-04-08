@@ -69,15 +69,39 @@ with st.sidebar:
         img_file_url = st.text_input("Image URL")
 
         if not img_file_url == "":
-            response = requests.get(img_file_url)
-            img_file = Image.open(BytesIO(response.content))
+
+            # Error handling for URLs
+            try:
+                response = requests.get(img_file_url)
+            except requests.exceptions.HTTPError as e:
+                st.error(f"HTTP Error: {e}")
+            except requests.exceptions.ConnectionError as e:
+                st.error(f"Connection Error: {e}")
+            except requests.exceptions.RequestException as e:
+                st.error(f"Unknown error: {e}")
+            else:
+
+                if (response.status_code >= 400 and response.status_code < 500):
+                    st.error("Client error: {response.status_code}, {response.reason}")
+                elif (response.status_code >= 500):
+                    st.error("Server error: {response.status_code}, {response.reason}")
+                else:
+                    
+                    # Handle successful HTTP Requests, but invalid image urls
+                    try:
+                        img_file = Image.open(BytesIO(response.content))
+                    except Exception as e:
+                        st.error(f"Error uploading image: {e}")
+                    else:
+                        st.success("Succesfully uploaded image!")
+
 
     elif upload_opt == "Test Images Directory":
         # Get a file in the Test Images Directory
         tid_path, files = get_tid_files()  
 
         img_file_name = st.selectbox(
-            "Upload Image from Test Folder",
+            "Available images",
             files,
             key = "sb_tid",
             index = files.index("African Grey 1.jpg")
